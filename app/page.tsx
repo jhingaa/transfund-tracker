@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import Logo from "@/components/Logo";
@@ -134,22 +135,13 @@ function CampaignSlideshow() {
 function FooterLogo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 group">
-      <svg width="34" height="34" viewBox="0 0 44 44" fill="none">
-        <defs>
-          <linearGradient id="fLogo" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#00b964" />
-            <stop offset="100%" stopColor="#00d4aa" />
-          </linearGradient>
-        </defs>
-        <rect width="44" height="44" rx="12" fill="url(#fLogo)" />
-        <circle cx="15" cy="29" r="7.5" fill="none" stroke="white" strokeWidth="2.2" />
-        <text x="15" y="33" textAnchor="middle" fontSize="8" fill="white" fontWeight="bold" fontFamily="system-ui">₹</text>
-        <line x1="21" y1="24" x2="33" y2="12" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
-        <polyline points="27.5,11 33.5,11.5 33,17.5" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="7" cy="8" r="1.5" fill="white" opacity="0.6" />
-        <circle cx="12" cy="5" r="1" fill="white" opacity="0.4" />
-        <circle cx="5" cy="13" r="1" fill="white" opacity="0.4" />
-      </svg>
+      <Image
+        src="/logo.png"
+        alt="TransFund Tracker"
+        width={34}
+        height={34}
+        style={{ objectFit: "contain" }}
+      />
       <div className="flex flex-col leading-none">
         <span className="font-extrabold text-white tracking-tight" style={{ fontSize: 16 }}>
           Trans<span style={{ color: "#00d4aa" }}>Fund</span>

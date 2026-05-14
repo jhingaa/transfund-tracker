@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React from "react";
+import Logo from "@/components/Logo";
 
 export default function Navbar() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function Navbar() {
 
   return (
     <div className="flex justify-between items-center px-6 py-4 bg-white shadow">
-      <h1 className="text-xl font-bold">Transfund Tracker</h1>
+      <Logo size={34} />
 
       <div>
         <button
