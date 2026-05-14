@@ -6,7 +6,7 @@ A full-stack fundraising and fund transparency platform where donors can browse 
 
 ---
 
-## What Makes It Special
+## What Makes It Special:
 
 - **Zero platform fee** — 100% of donations reach the campaign
 - **Daily donor limits** — organizers can cap how much a single donor contributes per day
@@ -19,7 +19,7 @@ A full-stack fundraising and fund transparency platform where donors can browse 
 
 ---
 
-## Tech Stack
+## Tech Stack:
 
 | Layer | Technology |
 |-------|------------|
