@@ -117,7 +117,7 @@ erDiagram
 
 ### Table Details
 
-#### 1. `donors`
+#### 1. `donors Tables`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -132,7 +132,7 @@ erDiagram
 
 ---
 
-#### 2. `campaigns`
+#### 2. `campaigns Tables`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
