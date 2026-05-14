@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import { getCampaign, makeDonation, getCampaignDonations, getStoredUser, fmtINR, fmtDate } from "@/lib/api";
 import { ArrowLeft, Users, Heart, CheckCircle, Target, TrendingUp, Clock } from "lucide-react";
 import Link from "next/link";
+import CampaignUpdatesFeed from "@/components/CampaignUpdatesFeed";
 
 const CATEGORY_META: Record<string, { emoji: string; gradient: string }> = {
   Education:  { emoji: "🎓", gradient: "from-blue-400 to-indigo-500" },
@@ -269,6 +270,9 @@ export default function DonorCampaignDetails({
           </div>
         </div>
       )}
+
+      {/* ── Campaign Updates Feed ── */}
+      <CampaignUpdatesFeed campaignId={Number(id)} />
 
       {/* ── Daily Limit Popup ── */}
       {limitPopup && (

@@ -160,6 +160,33 @@ export async function getUtilizationSummary(campaign_id: number) {
   return res.json();
 }
 
+// ─── Campaign Updates API ─────────────────────────────────────────
+export async function getCampaignUpdates(campaign_id: number) {
+  const res = await fetch(`${API}/campaign-updates/?campaign_id=${campaign_id}`);
+  if (!res.ok) throw new Error("Failed to fetch updates");
+  return res.json();
+}
+
+export async function createCampaignUpdate(formData: FormData) {
+  const res = await fetch(`${API}/campaign-updates/`, { method: "POST", body: formData });
+  if (!res.ok) {
+    let detail = "Failed to post update";
+    try { const j = await res.json(); if (j?.detail) detail = j.detail; } catch {}
+    throw new Error(detail);
+  }
+  return res.json();
+}
+
+// ─── Donor Impact API ─────────────────────────────────────────────
+export async function getDonorImpact(donor_email: string) {
+  const res = await fetch(`${API}/donations/impact?donor_email=${encodeURIComponent(donor_email)}`);
+  if (!res.ok) throw new Error("Failed to fetch donor impact");
+  return res.json();
+}
+
+// File URL helper (uploads served by backend)
+export const fileUrl = (path: string) => `${API}${path}`;
+
 // ─── Formatters ───────────────────────────────────────────────────────
 export function fmtINR(amount: number) {
   return `₹${amount.toLocaleString("en-IN")}`;

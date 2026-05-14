@@ -7,7 +7,7 @@ from sqlalchemy import text
 
 from database import engine, Base
 import models
-from routers import campaigns, donations, donors, receipts, utilizations, admins, auth
+from routers import campaigns, donations, donors, receipts, utilizations, admins, auth, campaign_updates
 
 # Auto-create tables on startup
 Base.metadata.create_all(bind=engine)
@@ -54,6 +54,7 @@ app.include_router(receipts.router)
 app.include_router(utilizations.router)
 app.include_router(admins.router)
 app.include_router(auth.router)
+app.include_router(campaign_updates.router)
 
 
 @app.get("/health")

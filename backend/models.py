@@ -97,6 +97,18 @@ class Utilization(Base):
     campaign = relationship("Campaign", back_populates="utilizations")
 
 
+class CampaignUpdate(Base):
+    __tablename__ = "campaign_updates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    campaign_id = Column(Integer, ForeignKey("campaigns.id"), nullable=False)
+    title = Column(String, nullable=False)
+    body = Column(Text, nullable=False)
+    file_url = Column(String, nullable=True)
+    posted_by = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 class Admin(Base):
     __tablename__ = "admins"
 

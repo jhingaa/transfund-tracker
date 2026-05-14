@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { getCampaign, getCampaignDonations, closeCampaign, fmtINR, fmtDate } from "@/lib/api";
+import { getCampaign, getCampaignDonations, closeCampaign, getStoredUser, fmtINR, fmtDate } from "@/lib/api";
 import { ArrowLeft, Users, Target, Clock, CheckCircle, TrendingUp, XCircle, ShieldOff } from "lucide-react";
 import Link from "next/link";
+import CampaignUpdatesFeed from "@/components/CampaignUpdatesFeed";
+import PostUpdateForm from "@/components/PostUpdateForm";
 
 const CATEGORY_META: Record<string, { emoji: string; gradient: string }> = {
   Education:  { emoji: "🎓", gradient: "from-blue-400 to-indigo-500" },
@@ -32,6 +34,9 @@ export default function CampaignDetail() {
   const [campaign, setCampaign]   = useState<Campaign | null>(null);
   const [donations, setDonations] = useState<Donation[]>([]);
   const [loading, setLoading]     = useState(true);
+
+  const [updatesRefresh, setUpdatesRefresh] = useState(0);
+  const user = getStoredUser();
 
   const [showEndModal, setShowEndModal]   = useState(false);
   const [closeReason, setCloseReason]     = useState("");
@@ -249,6 +254,16 @@ export default function CampaignDetail() {
           </div>
         )}
       </div>
+
+      {/* ── Campaign Updates ── */}
+      {isActive && user?.email && (
+        <PostUpdateForm
+          campaignId={Number(id)}
+          postedBy={user.email}
+          onPosted={() => setUpdatesRefresh((k) => k + 1)}
+        />
+      )}
+      <CampaignUpdatesFeed campaignId={Number(id)} refreshKey={updatesRefresh} />
 
       {/* Meta footer */}
       <div className="flex items-center gap-4 text-xs text-gray-400 px-1">

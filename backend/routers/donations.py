@@ -148,3 +148,68 @@ def get_donations(
         ]
 
     raise HTTPException(status_code=400, detail="Provide donor_email, organizer_email, or campaign_id")
+
+
+@router.get("/impact")
+def donor_impact(donor_email: str, db: Session = Depends(get_db)):
+    """
+    Proportional impact breakdown for a donor.
+
+    For each campaign the donor contributed to, compute their share of
+    every logged utilization based on (donor_total / campaign_raised).
+    """
+    donor_donations = (
+        db.query(models.Donation)
+        .filter(models.Donation.donor_email == donor_email)
+        .all()
+    )
+    if not donor_donations:
+        return []
+
+    # Sum per campaign for this donor
+    by_campaign: dict[int, float] = {}
+    for d in donor_donations:
+        by_campaign[d.campaign_id] = by_campaign.get(d.campaign_id, 0) + d.amount
+
+    result = []
+    for campaign_id, donor_total in by_campaign.items():
+        campaign = db.query(models.Campaign).filter(models.Campaign.id == campaign_id).first()
+        if not campaign:
+            continue
+        raised = campaign.raised_amount or 0
+        share = (donor_total / raised) if raised > 0 else 0
+
+        utilizations = (
+            db.query(models.Utilization)
+            .filter(models.Utilization.campaign_id == campaign_id)
+            .order_by(models.Utilization.created_at.desc())
+            .all()
+        )
+        total_utilized = sum(u.amount for u in utilizations)
+        your_utilized = round(share * total_utilized, 2)
+        your_unspent = round(max(0, donor_total - your_utilized), 2)
+
+        result.append({
+            "campaign_id": campaign_id,
+            "campaign_title": campaign.title,
+            "campaign_status": campaign.status,
+            "your_donation": round(donor_total, 2),
+            "campaign_raised": round(raised, 2),
+            "share_percent": round(share * 100, 2),
+            "your_utilized": your_utilized,
+            "your_unspent": your_unspent,
+            "breakdown": [
+                {
+                    "utilization_id": u.id,
+                    "description": u.description,
+                    "category": u.category,
+                    "utilization_amount": round(u.amount, 2),
+                    "your_share": round(share * u.amount, 2),
+                    "proof_url": u.proof_url,
+                    "created_at": u.created_at.isoformat() + "Z",
+                }
+                for u in utilizations
+            ],
+        })
+
+    return result

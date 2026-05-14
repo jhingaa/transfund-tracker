@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getCampaigns, getDonorDonations, getStoredUser, fmtINR, fmtDate } from "@/lib/api";
 import { ArrowRight, Heart, Target, Zap } from "lucide-react";
+import DonorImpactCard from "@/components/DonorImpactCard";
 
 const CATEGORY_META: Record<string, { emoji: string; gradient: string }> = {
   Education:  { emoji: "🎓", gradient: "from-blue-400 to-indigo-500" },
@@ -265,6 +266,9 @@ export default function DonorDashboard() {
         </div>
 
       </div>
+
+      {/* ── Where Your Money Went ── */}
+      {user?.email && <DonorImpactCard donorEmail={user.email} />}
 
       {/* ── Impact card ── */}
       {totalDonated > 0 && (

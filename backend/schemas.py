@@ -133,6 +133,21 @@ class UtilizationOut(BaseModel):
         from_attributes = True
 
 
+# ── Campaign Update Schemas ────────────────────────────────────
+
+class CampaignUpdateOut(BaseModel):
+    id: int
+    campaign_id: int
+    title: str
+    body: str
+    file_url: Optional[str] = None
+    posted_by: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 # ── Admin Schemas ──────────────────────────────────────────────
 
 class AdminCreate(BaseModel):

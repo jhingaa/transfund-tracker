@@ -92,6 +92,7 @@ def delete_campaign(campaign_id: int, db: Session = Depends(get_db)):
         db.query(models.Receipt).filter(models.Receipt.donation_id == donation.id).delete()
     db.query(models.Donation).filter(models.Donation.campaign_id == campaign_id).delete()
     db.query(models.Utilization).filter(models.Utilization.campaign_id == campaign_id).delete()
+    db.query(models.CampaignUpdate).filter(models.CampaignUpdate.campaign_id == campaign_id).delete()
     if campaign.image_url:
         img_path = os.path.join(os.path.dirname(__file__), "..", campaign.image_url.lstrip("/"))
         if os.path.exists(img_path):
