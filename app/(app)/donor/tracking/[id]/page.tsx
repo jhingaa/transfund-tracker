@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
-import { getCampaign, getUtilizations, getUtilizationSummary, fmtINR, fmtDate } from "@/lib/api";
+import { getCampaign, getUtilizations, getUtilizationSummary, fmtINR, fmtDate, fileUrl } from "@/lib/api";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -80,7 +80,7 @@ export default function Tracking({ params }: { params: Promise<{ id: string }> }
                 <span className="capitalize bg-gray-100 px-2 py-0.5 rounded">{u.category}</span>
                 <span>{fmtDate(u.created_at)}</span>
                 {u.proof_url && (
-                  <a href={`http://localhost:8000${u.proof_url}`} target="_blank" rel="noreferrer" className="text-blue-600 underline">View proof</a>
+                  <a href={fileUrl(u.proof_url!)} target="_blank" rel="noreferrer" className="text-blue-600 underline">View proof</a>
                 )}
               </div>
             </div>

@@ -14,6 +14,7 @@ const CATEGORY_META: Record<string, { emoji: string; gradient: string }> = {
   Community:  { emoji: "🤝", gradient: "from-amber-400 to-orange-500" },
   Emergency:  { emoji: "🚨", gradient: "from-orange-400 to-red-500" },
   General:    { emoji: "💡", gradient: "from-gray-400 to-slate-500" },
+  Others:     { emoji: "✨", gradient: "from-slate-400 to-indigo-400" },
 };
 
 export default function OrganizerDashboard() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { getCampaign, makeDonation, getCampaignDonations, getStoredUser, fmtINR, fmtDate } from "@/lib/api";
+import { getCampaign, makeDonation, getCampaignDonations, getStoredUser, fmtINR, fmtDate, fileUrl } from "@/lib/api";
 import { ArrowLeft, Users, Heart, CheckCircle, Target, TrendingUp, Clock } from "lucide-react";
 import Link from "next/link";
 import CampaignUpdatesFeed from "@/components/CampaignUpdatesFeed";
@@ -14,6 +14,7 @@ const CATEGORY_META: Record<string, { emoji: string; gradient: string }> = {
   Community:  { emoji: "🤝", gradient: "from-amber-400 to-orange-500" },
   Emergency:  { emoji: "🚨", gradient: "from-orange-400 to-red-500" },
   General:    { emoji: "💡", gradient: "from-gray-400 to-slate-500" },
+  Others:     { emoji: "✨", gradient: "from-slate-400 to-indigo-400" },
 };
 
 type Campaign = {
@@ -146,7 +147,7 @@ export default function DonorCampaignDetails({
         <div className="h-64 relative overflow-hidden">
           {campaign.image_url ? (
             <img
-              src={`http://localhost:8000${campaign.image_url}`}
+              src={fileUrl(campaign.image_url!)}
               alt={campaign.title}
               className="w-full h-full object-cover"
             />

@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Search, SlidersHorizontal, X, TrendingUp, Clock, Star, ChevronDown } from "lucide-react";
-import { getCampaigns, fmtINR, getStoredUser } from "@/lib/api";
+import { getCampaigns, fmtINR, getStoredUser, fileUrl } from "@/lib/api";
 
-const CATEGORIES = ["All", "Education", "Medical", "Events", "NGOs", "Community", "Emergency"];
+const CATEGORIES = ["All", "Education", "Medical", "Events", "NGOs", "Community", "Emergency", "Others"];
 
 const CATEGORY_META: Record<string, { emoji: string; gradient: string; badge: string }> = {
   Education:  { emoji: "🎓", gradient: "from-blue-400 to-indigo-500",   badge: "bg-blue-50 text-blue-700 border-blue-200" },
@@ -15,6 +15,7 @@ const CATEGORY_META: Record<string, { emoji: string; gradient: string; badge: st
   Community:  { emoji: "🤝", gradient: "from-amber-400 to-orange-500",  badge: "bg-amber-50 text-amber-700 border-amber-200" },
   Emergency:  { emoji: "🚨", gradient: "from-orange-400 to-red-500",    badge: "bg-orange-50 text-orange-700 border-orange-200" },
   General:    { emoji: "💡", gradient: "from-gray-400 to-slate-500",    badge: "bg-gray-50 text-gray-700 border-gray-200" },
+  Others:     { emoji: "✨", gradient: "from-slate-400 to-indigo-400",  badge: "bg-slate-50 text-slate-700 border-slate-200" },
 };
 
 const SORT_OPTIONS = [
@@ -241,7 +242,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
         {/* Image / Placeholder */}
         <div className={`h-44 relative overflow-hidden bg-gradient-to-br ${meta.gradient}`}>
           {campaign.image_url ? (
-            <img src={`http://localhost:8000${campaign.image_url}`} alt={campaign.title}
+            <img src={fileUrl(campaign.image_url!)} alt={campaign.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-5xl opacity-60 group-hover:scale-110 transition-transform duration-300">

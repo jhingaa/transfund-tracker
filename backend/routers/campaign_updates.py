@@ -57,3 +57,19 @@ def list_updates(campaign_id: int, db: Session = Depends(get_db)):
         .order_by(models.CampaignUpdate.created_at.desc())
         .all()
     )
+
+
+@router.delete("/{update_id}")
+def delete_update(update_id: int, db: Session = Depends(get_db)):
+    update = db.query(models.CampaignUpdate).filter(models.CampaignUpdate.id == update_id).first()
+    if not update:
+        raise HTTPException(status_code=404, detail="Update not found")
+
+    if update.file_url:
+        file_path = os.path.join(os.path.dirname(__file__), "..", update.file_url.lstrip("/"))
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+    db.delete(update)
+    db.commit()
+    return {"message": "Update deleted"}

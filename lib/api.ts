@@ -1,4 +1,4 @@
-const API = "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 // ─── Auth helpers ────────────────────────────────────────────────────
 export function getStoredUser() {
@@ -99,6 +99,16 @@ export async function deleteCampaign(id: number) {
   return res.json();
 }
 
+export async function updateCampaign(id: number, formData: FormData) {
+  const res = await fetch(`${API}/campaigns/${id}`, { method: "PATCH", body: formData });
+  if (!res.ok) {
+    let detail = "Failed to update campaign";
+    try { const j = await res.json(); if (j?.detail) detail = j.detail; } catch {}
+    throw new Error(detail);
+  }
+  return res.json();
+}
+
 export async function closeCampaign(id: number, reason: string) {
   const res = await fetch(`${API}/campaigns/${id}/close`, {
     method: "PATCH",
@@ -174,6 +184,12 @@ export async function createCampaignUpdate(formData: FormData) {
     try { const j = await res.json(); if (j?.detail) detail = j.detail; } catch {}
     throw new Error(detail);
   }
+  return res.json();
+}
+
+export async function deleteCampaignUpdate(updateId: number) {
+  const res = await fetch(`${API}/campaign-updates/${updateId}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Failed to delete update");
   return res.json();
 }
 

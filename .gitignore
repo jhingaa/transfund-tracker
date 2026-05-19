@@ -50,3 +50,7 @@ venv/
 # backend uploads (user-generated content)
 /backend/uploads/*
 !/backend/uploads/.gitkeep
+
+# Temporary planning files
+Changes to make/
+

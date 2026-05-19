@@ -8,6 +8,7 @@ from sqlalchemy import text
 from database import engine, Base
 import models
 from routers import campaigns, donations, donors, receipts, utilizations, admins, auth, campaign_updates
+from seed_campaigns import seed_if_empty
 
 # Auto-create tables on startup
 Base.metadata.create_all(bind=engine)
@@ -23,6 +24,8 @@ _SCHEMA_SYNC_STATEMENTS = [
     "ALTER TABLE donations ADD COLUMN IF NOT EXISTS payment_method VARCHAR",
     "ALTER TABLE donations ADD COLUMN IF NOT EXISTS transaction_id VARCHAR",
     "ALTER TABLE donations ADD COLUMN IF NOT EXISTS status VARCHAR DEFAULT 'completed'",
+    "ALTER TABLE organizers ADD COLUMN IF NOT EXISTS phone VARCHAR",
+    "ALTER TABLE donors ADD COLUMN IF NOT EXISTS phone VARCHAR",
 ]
 try:
     with engine.begin() as _conn:
@@ -30,6 +33,8 @@ try:
             _conn.execute(text(_stmt))
 except Exception as _e:
     print(f"[schema-sync] warning: {_e}")
+
+seed_if_empty()
 
 app = FastAPI(title="Transfund Tracker API", version="1.0.0")
 

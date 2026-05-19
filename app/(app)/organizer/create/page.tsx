@@ -5,7 +5,7 @@ import { createCampaign, getStoredUser } from "@/lib/api";
 import { UploadCloud, Image as ImageIcon, X, PlusCircle, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const CATEGORIES = ["Education", "Medical", "Events", "NGOs", "Community", "Emergency"];
+const CATEGORIES = ["Education", "Medical", "Events", "NGOs", "Community", "Emergency", "Others"];
 
 const CATEGORY_META: Record<string, { emoji: string }> = {
   Education: { emoji: "🎓" },
@@ -14,6 +14,7 @@ const CATEGORY_META: Record<string, { emoji: string }> = {
   NGOs:      { emoji: "🌍" },
   Community: { emoji: "🤝" },
   Emergency: { emoji: "🚨" },
+  Others:    { emoji: "✨" },
 };
 
 export default function CreateCampaignPage() {

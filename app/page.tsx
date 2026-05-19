@@ -26,6 +26,112 @@ function useScrollReveal() {
   }, []);
 }
 
+/* ── Category data for "Fundraise for anything" slideshow ── */
+const CATEGORIES = [
+  { name: "Medical",   img: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1400&q=80", color: "from-red-600/70",    desc: "Support medical treatments & hospital care" },
+  { name: "Education", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80", color: "from-blue-600/70",   desc: "Fund scholarships, schools & learning" },
+  { name: "Emergency", img: "https://images.unsplash.com/photo-1542393545-10f5cde2c810?auto=format&fit=crop&w=1400&q=80", color: "from-orange-600/70",  desc: "Rapid response for crisis situations" },
+  { name: "Community", img: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1400&q=80", color: "from-green-600/70",   desc: "Build stronger neighbourhoods together" },
+  { name: "NGOs",      img: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1400&q=80", color: "from-teal-600/70",    desc: "Support non-profit organisations & causes" },
+  { name: "Memorial",  img: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&w=1400&q=80", color: "from-purple-600/70",  desc: "Honour & remember loved ones" },
+  { name: "Animals",   img: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1400&q=80", color: "from-pink-600/70",    desc: "Rescue, shelter & care for animals" },
+  { name: "Events",    img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1400&q=80", color: "from-yellow-600/70",  desc: "Fund celebrations & community events" },
+];
+
+function CategorySlideshow() {
+  const [current, setCurrent] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const goTo = (idx: number) => {
+    if (animating) return;
+    setAnimating(true);
+    setTimeout(() => { setCurrent(idx); setAnimating(false); }, 400);
+  };
+
+  const prev = () => goTo((current - 1 + CATEGORIES.length) % CATEGORIES.length);
+  const next = () => goTo((current + 1) % CATEGORIES.length);
+
+  useEffect(() => {
+    timerRef.current = setTimeout(next, 4000);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [current]);
+
+  const cat = CATEGORIES[current];
+
+  return (
+    <div className="relative w-full h-[420px] md:h-[480px] overflow-hidden rounded-3xl shadow-2xl">
+      {/* Photo */}
+      <img
+        key={current}
+        src={cat.img}
+        alt={cat.name}
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          opacity: animating ? 0 : 1,
+          transform: animating ? "scale(1.06)" : "scale(1)",
+          transition: "opacity 0.5s ease, transform 0.5s ease",
+        }}
+      />
+
+      {/* Gradient overlay */}
+      <div className={`absolute inset-0 bg-gradient-to-t ${cat.color} to-black/20`} />
+
+      {/* Text */}
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-center text-center px-8"
+        style={{
+          opacity: animating ? 0 : 1,
+          transform: animating ? "translateY(16px)" : "translateY(0)",
+          transition: "opacity 0.45s ease 0.08s, transform 0.45s ease 0.08s",
+        }}
+      >
+        <Link href="/login"
+          className="inline-block px-8 py-3 bg-white/15 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full text-white font-bold text-3xl md:text-4xl mb-3 transition">
+          {cat.name}
+        </Link>
+        <p className="text-white/80 text-base md:text-lg max-w-md">{cat.desc}</p>
+
+        {/* Category indicator pills */}
+        <div className="flex flex-wrap justify-center gap-2 mt-6">
+          {CATEGORIES.map((c, i) => (
+            <button
+              key={c.name}
+              onClick={() => goTo(i)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 border ${
+                i === current
+                  ? "bg-white text-gray-900 border-white"
+                  : "bg-white/15 text-white border-white/30 hover:bg-white/25"
+              }`}
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Arrows */}
+      <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/15 hover:bg-white/30 backdrop-blur rounded-full flex items-center justify-center text-white text-xl transition border border-white/20">
+        ‹
+      </button>
+      <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/15 hover:bg-white/30 backdrop-blur rounded-full flex items-center justify-center text-white text-xl transition border border-white/20">
+        ›
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+        {CATEGORIES.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            className={`rounded-full transition-all duration-300 ${i === current ? "w-6 h-2 bg-white" : "w-2 h-2 bg-white/40 hover:bg-white/70"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Campaign Slideshow ── */
 const SLIDES = [
   {
@@ -327,24 +433,8 @@ export default function LandingPage() {
             <p className="text-center text-gray-500 mb-12">People raise money for all kinds of causes on TransFund Tracker.</p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {[
-              { name: "Medical",   emoji: "🏥", hover: "hover:bg-red-50 hover:border-red-300",    delay: "delay-100" },
-              { name: "Education", emoji: "🎓", hover: "hover:bg-blue-50 hover:border-blue-300",  delay: "delay-200" },
-              { name: "Emergency", emoji: "🚨", hover: "hover:bg-orange-50 hover:border-orange-300", delay: "delay-300" },
-              { name: "Community", emoji: "🤝", hover: "hover:bg-green-50 hover:border-green-300",  delay: "delay-400" },
-              { name: "NGOs",      emoji: "🌍", hover: "hover:bg-teal-50 hover:border-teal-300",   delay: "delay-100" },
-              { name: "Memorial",  emoji: "🕊️", hover: "hover:bg-purple-50 hover:border-purple-300", delay: "delay-200" },
-              { name: "Animals",   emoji: "🐾", hover: "hover:bg-pink-50 hover:border-pink-300",   delay: "delay-300" },
-              { name: "Events",    emoji: "🎉", hover: "hover:bg-yellow-50 hover:border-yellow-300", delay: "delay-400" },
-            ].map((cat) => (
-              <Link key={cat.name} href="/login"
-                data-animate="scale-in"
-                className={`${cat.delay} hover-lift bg-white border-2 border-gray-100 rounded-2xl p-5 flex flex-col items-center gap-2 ${cat.hover} transition-colors duration-200 cursor-pointer`}>
-                <span className="text-3xl">{cat.emoji}</span>
-                <span className="text-sm font-semibold text-gray-700">{cat.name}</span>
-              </Link>
-            ))}
+          <div data-animate="fade-up" className="delay-200">
+            <CategorySlideshow />
           </div>
         </div>
       </section>

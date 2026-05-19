@@ -102,6 +102,46 @@ def delete_campaign(campaign_id: int, db: Session = Depends(get_db)):
     return {"message": "Campaign deleted"}
 
 
+@router.patch("/{campaign_id}")
+def update_campaign(
+    campaign_id: int,
+    title: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    category: Optional[str] = Form(None),
+    goal_amount: Optional[float] = Form(None),
+    daily_donor_limit: Optional[float] = Form(None),
+    image: Optional[UploadFile] = File(None),
+    db: Session = Depends(get_db),
+):
+    campaign = db.query(models.Campaign).filter(models.Campaign.id == campaign_id).first()
+    if not campaign:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+
+    if title is not None:
+        campaign.title = title
+    if description is not None:
+        campaign.description = description
+    if category is not None:
+        campaign.category = category
+    if goal_amount is not None:
+        campaign.goal_amount = goal_amount
+    if daily_donor_limit is not None:
+        campaign.daily_donor_limit = daily_donor_limit
+
+    if image and image.filename:
+        upload_dir = os.path.join(os.path.dirname(__file__), "..", "uploads")
+        os.makedirs(upload_dir, exist_ok=True)
+        safe_name = image.filename.replace(" ", "_")
+        file_path = os.path.join(upload_dir, safe_name)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+        campaign.image_url = f"/uploads/{safe_name}"
+
+    db.commit()
+    db.refresh(campaign)
+    return campaign
+
+
 @router.patch("/{campaign_id}/close")
 def close_campaign(
     campaign_id: int,

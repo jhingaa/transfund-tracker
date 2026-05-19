@@ -1,3 +1,4 @@
+
 """One-off schema sync helper. Adds missing columns without dropping data."""
 from database import engine
 from sqlalchemy import text

@@ -16,6 +16,7 @@ const CATEGORY_META: Record<string, { emoji: string; gradient: string }> = {
   Community:  { emoji: "🤝", gradient: "from-amber-400 to-orange-500" },
   Emergency:  { emoji: "🚨", gradient: "from-orange-400 to-red-500" },
   General:    { emoji: "💡", gradient: "from-gray-400 to-slate-500" },
+  Others:     { emoji: "✨", gradient: "from-slate-400 to-indigo-400" },
 };
 
 type Campaign = {
@@ -263,7 +264,7 @@ export default function CampaignDetail() {
           onPosted={() => setUpdatesRefresh((k) => k + 1)}
         />
       )}
-      <CampaignUpdatesFeed campaignId={Number(id)} refreshKey={updatesRefresh} />
+      <CampaignUpdatesFeed campaignId={Number(id)} refreshKey={updatesRefresh} canDelete />
 
       {/* Meta footer */}
       <div className="flex items-center gap-4 text-xs text-gray-400 px-1">
